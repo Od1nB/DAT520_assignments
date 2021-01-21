@@ -22,6 +22,7 @@ should be printed as
 
 "Student ID: 42. Name: Doe, John. Age: 25.
 */
+import "fmt"
 
 // Student holds information about a student.
 type Student struct {
@@ -32,5 +33,5 @@ type Student struct {
 }
 
 func (s Student) String() string {
-	return ""
+	return fmt.Sprintf("Student ID: %d. Name: %s, %s. Age: %d.",s.ID,s.LastName,s.FirstName,s.Age)
 }
