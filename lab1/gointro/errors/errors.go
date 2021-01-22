@@ -1,6 +1,8 @@
 package errors
 
-import "fmt"
+import (
+	"fmt"
+)
 
 /*
 Task 5: Errors needed for multiwriter
@@ -38,9 +40,6 @@ The first error + " (and 1 other error)"
 
 The first error + " (and X other errors)"
 */
-
-
-
 func (m Errors) Error() string {
 	var ec int 
 	var eSlice []error 
