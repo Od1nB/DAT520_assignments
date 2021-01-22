@@ -38,5 +38,27 @@ that writer's index position.
 // WriteTo writes b to the provided writers, returns a slice of the number
 // of byte written to each writer, and a slice of errors, if any.
 func WriteTo(b []byte, writers ...io.Writer) (n []int, errs errors.Errors) {
-	return []int{}, nil
+	outInt := []int{}
+	outErr := []error{}
+	if len(writers)> 0 {
+		for i := 0; i < len(writers); i++ {
+			ind, errs := writers[i].Write(b)
+			outInt = append(outInt, ind)
+			if errs != nil {
+				outErr = append(outErr,errs)
+			} else if ind != len(b) {
+				outErr = append(outErr,io.ErrShortWrite)
+			} else{
+				outErr = append(outErr, nil)
+			}
+		}
+	} else {
+		return []int{}, nil
+	}
+	for i := range outErr {
+		if outErr[i] != nil {
+			return outInt,outErr
+		}
+	}
+	return outInt, nil
 }
