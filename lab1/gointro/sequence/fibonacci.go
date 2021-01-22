@@ -1,6 +1,8 @@
 package sequence
 
-//import "fmt"
+import (
+	"fmt"
+)
 
 // Task 1: Fibonacci numbers
 //
