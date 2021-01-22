@@ -29,5 +29,26 @@ type rot13Reader struct {
 }
 
 func (r rot13Reader) Read(p []byte) (n int, err error) {
-	return 0, nil
+	ind, errs := r.r.Read(p) 
+	if errs != nil {
+		return 0, errs
+	}
+
+	for i := 0; i < ind; i++ {
+		val := p[i]
+		//ascii value of alphabetical signs 65-90 for capital and 97-122 for lower case
+		if val >= 65 && val <= 90 {
+			val += 13
+			if val > 90 {
+				val -= 26
+			}
+		}else if val >= 97  && val <= 122{
+			val += 13
+			if val > 122 {
+				val -= 26
+			}
+		}
+		p[i] = val
+	}
+	return ind,nil
 }
