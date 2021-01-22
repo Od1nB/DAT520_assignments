@@ -32,8 +32,8 @@ No other changes to the text should be made.
 
 3. How would you revert *unstaged* (not yet added with `git add`) changes to `README.md` in the current branch?
 
-    - [x] a) `git reset HEAD README.md`
-    - [ ] b) `git reset --hard README.md`
+    - [] a) `git reset HEAD README.md`
+    - [x] b) `git reset --hard README.md`
     - [ ] c) `git checkout -- README.md`
     - [ ] d) `git revert README.md`
 
@@ -99,8 +99,8 @@ No other changes to the text should be made.
     ```
 
     - [ ] a) `go/.DS_Store`, `go/main.go` and `notes/work-notes.md`
-    - [ ] b) `go/main.go`, `notes/work-notes.md` and `python/main.py`
-    - [x] c) `go/main.go` and `notes/work-notes.md`
+    - [x] b) `go/main.go`, `notes/work-notes.md` and `python/main.py`
+    - [] c) `go/main.go` and `notes/work-notes.md`
     - [ ] d) `go/.DS_Store` and `go/main.go`
 
 8. Which command lets you see the changes made to `file.txt` relative to the staging area (i.e. unstaged changes to `file.txt`)?
@@ -112,8 +112,8 @@ No other changes to the text should be made.
 9. Which command lets you see all changes made to `file.txt` since the latest commit?
 
     - [ ] a) `git diff file.txt`
-    - [ ] b) `git diff HEAD file.txt`
-    - [x] c) `git diff --cached file.txt`
+    - [x] b) `git diff HEAD file.txt`
+    - [] c) `git diff --cached file.txt`
 
 10. When you run `git pull` and get a merge conflict, which of the below approaches is most suited to resolving the merge conflict?
 
