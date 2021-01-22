@@ -1,5 +1,7 @@
 package errors
 
+import "fmt"
+
 /*
 Task 5: Errors needed for multiwriter
 
@@ -36,6 +38,26 @@ The first error + " (and 1 other error)"
 
 The first error + " (and X other errors)"
 */
+
+
+
 func (m Errors) Error() string {
-	return ""
+	var ec int 
+	var eSlice []error 
+	for i := 0 ; i < len(m); i++ {
+		if m[i] != nil{
+			ec++
+			eSlice = append(eSlice, m[i])
+		}
+	}
+	switch ec{
+		case 0:
+			return "(0 errors)"
+		case 1:
+			return eSlice[0].Error()
+		case 2:
+			return eSlice[0].Error()+" (and 1 other error)"
+		default:
+			return fmt.Sprintf("%v (and %v other errors)",eSlice[0],ec-1)
+	}
 }
