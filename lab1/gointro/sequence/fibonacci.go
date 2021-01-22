@@ -1,9 +1,5 @@
 package sequence
 
-import (
-	"fmt"
-)
-
 // Task 1: Fibonacci numbers
 //
 // fibonacci(n) returns the n-th Fibonacci number, and is defined by the

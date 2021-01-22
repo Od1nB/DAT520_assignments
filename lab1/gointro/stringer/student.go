@@ -1,5 +1,9 @@
 package stringer
 
+import (
+	"fmt"
+)
+
 /*
 Task 2: Stringers
 
@@ -22,7 +26,6 @@ should be printed as
 
 "Student ID: 42. Name: Doe, John. Age: 25.
 */
-import "fmt"
 
 // Student holds information about a student.
 type Student struct {
