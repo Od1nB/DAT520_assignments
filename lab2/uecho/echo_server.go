@@ -2,7 +2,7 @@
 package main
 
 import (
-	"fmt"
+	"io"
 	"net"
 	"strings"
 )
@@ -11,7 +11,6 @@ import (
 // https://github.com/COURSE_TAG/assignments/tree/master/lab2/README.md#udp-echo-server
 type UDPServer struct {
 	conn *net.UDPConn
-	// TODO(student): Add fields if needed
 }
 
 // NewUDPServer returns a new UDPServer listening on addr. It should return an
@@ -24,7 +23,6 @@ func NewUDPServer(addr string) (*UDPServer, error) {
 	}
 
 	connUDP, err2 := net.ListenUDP("udp",conn)
-	fmt.Println(connUDP)
 	if err2 != nil {
 		return nil, err2
 	}
@@ -42,40 +40,91 @@ func (u *UDPServer) ServeUDP() {
 	for {
 		n, addr, err := u.conn.ReadFromUDP(buff[0:])
 		_= err
-		fmt.Printf(string(rune(n)))
 		inpArray := strings.Split(string(buff[:n]),"|:|")
 		cmd := inpArray[0]
-		fmt.Println(cmd)
 		inptxt := inpArray[1]
-		fmt.Println(inptxt)
 
 
 		switch cmd {
 		case "UPPER":
 			outtxt := strings.ToUpper(inptxt)
-			//u.conn.WriteToUDP([]byte(outtxt),&u.conn.LocalAddr())
-			//fmt.Println(outtxt)
 			u.conn.WriteToUDP([]byte(outtxt),addr)
 		case "LOWER":
-			//outtxt := strings.ToLower(inptxt)
-			//u.conn.WriteToUDP([]byte(outtxt),addr)
+			outtxt := strings.ToLower(inptxt)
+			u.conn.WriteToUDP([]byte(outtxt),addr)
 
 		case "CAMEL":
-			//temptxt := strings.Split(inptxt," ")
-			//var outtxt string
-			u.conn.WriteToUDP([]byte(inptxt),addr)
+			temptxt := strings.Split(inptxt," ")
+			var outtxt string
+			for i := 0; i < len(temptxt); i++ {
+				if len(temptxt[i]) == 1 {
+					outtxt += strings.ToUpper(temptxt[i])+" "
+
+				}else{
+					outtxt += strings.ToUpper(temptxt[i][:1])+ strings.ToLower(temptxt[i][1:])+" "
+				}
+			}
+			outtxt = outtxt[:len(outtxt)-1]
+			u.conn.WriteToUDP([]byte(outtxt),addr)
 		
 		case "ROT13":
-			//temptxt := strings.Split(inptxt," ")
-			//var outtxt string
-			u.conn.WriteToUDP([]byte(inptxt),addr)
+			b1 := make([]byte,1024)
+			r := rot13Reader{strings.NewReader(inptxt)}
+			outb,err := r.Read(b1)
+			if err == nil {
+				outtxt := string(b1[:outb])
+				u.conn.WriteToUDP([]byte(outtxt),addr)
+			}
 		
 		case "SWAP":
-			//temptxt := strings.Split(inptxt," ")
-			//var outtxt string
-			u.conn.WriteToUDP([]byte(inptxt),addr)
+			outtxt := strings.Map(swapC,inptxt)
+			u.conn.WriteToUDP([]byte(outtxt),addr)
 		}
 	}
+}
+
+
+//Implemented a function from go playground: https://play.golang.org/p/6kzKnWG7AK to swap cases
+func swapC(r rune) rune  {
+	switch{
+	case 'a' <= r && r <= 'z':
+		return r - 'a' + 'A'
+    case 'A' <= r && r <= 'Z':
+        return r - 'A' + 'a'
+    default:
+        return r
+	}
+}
+
+
+//Copied from lab1/gointro
+type rot13Reader struct {
+	r io.Reader
+}
+
+func (r rot13Reader) Read(p []byte) (n int, err error) {
+	ind, errs := r.r.Read(p) 
+	if errs != nil {
+		return 0, errs
+	}
+
+	for i := 0; i < ind; i++ {
+		val := p[i]
+		//ascii value of alphabetical signs 65-90 for capital and 97-122 for lower case
+		if val >= 65 && val <= 90 {
+			val += 13
+			if val > 90 {
+				val -= 26
+			}
+		}else if val >= 97  && val <= 122{
+			val += 13
+			if val > 122 {
+				val -= 26
+			}
+		}
+		p[i] = val
+	}
+	return ind,nil
 }
 
 // socketIsClosed is a helper method to check if a listening socket has been
