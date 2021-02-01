@@ -2,6 +2,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"net"
 	"strings"
@@ -40,7 +41,9 @@ func (u *UDPServer) ServeUDP() {
 	for {
 		n, addr, err := u.conn.ReadFromUDP(buff[0:])
 		_= err
+		fmt.Println(string(buff[:n]))
 		inpArray := strings.Split(string(buff[:n]),"|:|")
+		if len(inpArray) != 2{u.conn.WriteToUDP([]byte("Unknown command"),addr)} 
 		cmd := inpArray[0]
 		inptxt := inpArray[1]
 
@@ -79,7 +82,11 @@ func (u *UDPServer) ServeUDP() {
 		case "SWAP":
 			outtxt := strings.Map(swapC,inptxt)
 			u.conn.WriteToUDP([]byte(outtxt),addr)
+		default:
+			outtxt := "Unknown command"
+			u.conn.WriteToUDP([]byte(outtxt),addr)
 		}
+		
 	}
 }
 
