@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 var httpAddr = flag.String("http", ":8080", "Listen address")
@@ -29,7 +30,6 @@ func NewServer() *Server {
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
 	if r.URL.Path == "/"{
 		w.WriteHeader(200)
 		w.Write([]byte("Hello World!\n"))
@@ -42,21 +42,29 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.counter++
 		w.WriteHeader(301)
 		w.Write([]byte("<a href=\"http://www.github.com\">Moved Permanently</a>.\n\n"))
+	}else if r.URL.Path == "/fizzbuzz"{
+		s.counter++
+		value, _ := r.URL.Query()["value"]
+		w.WriteHeader(200)
+		w.Write([]byte(fizzbuzz(value[0])))
 	}else{
 		w.WriteHeader(404)
 		w.Write([]byte("404 page not found\n"))
 		s.counter++
 	}
+}
 
-	//{"GET", "/", 200, "Hello World!\n"}
-	
-	//The pattern "/"" (root) should return status code 200 and the body Hello World!\n.
-	// GET: "/" return 200 and "Hello World!\n"
-
-	// /counter. A request to this pattern should return status code 200 and the current count (inclusive the current request) as the body, e.g. counter: 42\n
-
-	//A request to the pattern /github should return status code 301 to the client with body <a href=\"http://www.github.com\">Moved Permanently</a>.\n\n
-
-	//All other patterns should return status code 404 and the body 404 page not found\n
-
+func fizzbuzz(val string) (string)  {
+	if val == "" {
+		return "no value provided\n"
+	}
+	intVal, err := strconv.ParseInt(val,10,64)
+	if err != nil{
+		return "not an integer\n"
+	}else{
+		if intVal%3 == 0 && intVal%5 == 0 {return "fizzbuzz\n"}
+		if intVal%3 == 0 {return "fizz\n"}
+		if intVal%5 == 0 {return "buzz\n"}
+		return fmt.Sprintf("%v\n",intVal)
+	}
 }
