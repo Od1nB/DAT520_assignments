@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -24,19 +25,27 @@ type Server struct { // TODO(student): Add needed fields
 // NOTE: It should NOT start to listen on an HTTP endpoint.
 func NewServer() *Server {
 	s := &Server{counter: 0}
-	// TODO(student): Implement
 	return s
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
-	// TODO(student): Implement
 	if r.URL.Path == "/"{
 		w.WriteHeader(200)
 		w.Write([]byte("Hello World!\n"))
+		s.counter++
+	}else if r.URL.Path == "/counter"{
+		s.counter++
+		w.WriteHeader(200)
+		w.Write([]byte(fmt.Sprintf("counter: %v\n",s.counter)))
+	}else if r.URL.Path =="/github"{
+		s.counter++
+		w.WriteHeader(301)
+		w.Write([]byte("<a href=\"http://www.github.com\">Moved Permanently</a>.\n\n"))
 	}else{
 		w.WriteHeader(404)
 		w.Write([]byte("404 page not found\n"))
+		s.counter++
 	}
 
 	//{"GET", "/", 200, "Hello World!\n"}
