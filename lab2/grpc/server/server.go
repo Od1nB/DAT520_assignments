@@ -70,7 +70,7 @@ func (s *keyValueServicesServer) Insert(ctx context.Context, req *pb.InsertReque
 func (s *keyValueServicesServer) Lookup(ctx context.Context, req *pb.LookupRequest) (*pb.LookupResponse, error) {
 	// TODO (student): Implement function Lookup
 
-	return &pb.LookupResponse{Value: "Initial value"}, nil
+	return &pb.LookupResponse{Value: s.kv[req.Key]}, nil
 }
 
 //**************************************************************************************************************
@@ -83,7 +83,12 @@ func (s *keyValueServicesServer) Lookup(ctx context.Context, req *pb.LookupReque
 func (s *keyValueServicesServer) Keys(ctx context.Context, req *pb.KeysRequest) (*pb.KeysResponse, error) {
 	// TODO (student): Implement function Keys
 
-	return &pb.KeysResponse{Keys: []string{"Initial", "value"}}, nil
+	var keySlice []string
+	for v, _ := range s.kv {
+		keySlice = append(keySlice, v)
+	}
+
+	return &pb.KeysResponse{Keys: keySlice}, nil
 }
 
 func main() {
